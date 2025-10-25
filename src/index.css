@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.neo-outset {
+  box-shadow: 8px 8px 16px #161616, -8px -8px 16px #2e2e2e;
+}
+
+.neo-inset-form-field {
+  box-shadow: inset 8px 8px 16px #161616, inset -8px -8px 16px #2e2e2e;
+  transition: all 0.3s ease-in-out;
+}
+
+.neo-inset-form-field:hover,
+.neo-inset-form-field:focus,
+.neo-inset-form-field:focus-visible {
+  box-shadow: inset 8px 8px 16px #161616, inset -8px -8px 16px #2e2e2e, 0 0 40px rgba(209, 0, 0, 0.8);
+}
+
+.neo-outset-button {
+  background-color: #2C2C2C;
+  box-shadow: 6px 6px 12px #161616, -6px -6px 12px #2e2e2e, 0 0 20px rgba(209, 0, 0, 1.6);
+  transition: all 0.3s ease-in-out;
+}
+
+.neo-outset-button:hover {
+  background-color: #D10000;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0, 0);
+    text-shadow: 2px 2px 0px #ff0000, -2px -2px 0px #00ff00;
+  }
+  25% {
+    transform: translate(-2px, 2px);
+    text-shadow: -2px 2px 0px #ff0000, 2px -2px 0px #00ff00;
+  }
+  50% {
+    transform: translate(2px, -2px);
+    text-shadow: 2px -2px 0px #ff0000, -2px 2px 0px #00ff00;
+  }
+  75% {
+    transform: translate(2px, 2px);
+    text-shadow: 2px 2px 0px #ff0000, -2px -2px 0px #00ff00;
+  }
+  100% {
+    transform: translate(0, 0);
+    text-shadow: -2px -2px 0px #ff0000, 2px 2px 0px #00ff00;
+  }
+}
+
+.glitch {
+  animation: glitch 0.2s infinite;
+}
+
+
+
+.glass-gradient {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* PSP XMB-style hotspot glow traveling the border */
+@keyframes pulse-glow {
+  0%   { top: 0%;   left: 0%; }
+  25%  { top: 0%;   left: 100%; }
+  50%  { top: 100%; left: 100%; }
+  75%  { top: 100%; left: 0%; }
+  100% { top: 0%;   left: 0%; }
+}
+
+.animated-glow-button {
+  position: relative;
+  overflow: hidden;
+  z-index: 30; /* keep above background/rain layers */
+}
+
+.animated-glow-button::before {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  pointer-events: none;
+  /* Bright red hotspot fading to transparent */
+  background: radial-gradient(circle at center,
+    rgba(209, 0, 0, 0.95) 0%,
+    rgba(209, 0, 0, 0.45) 40%,
+    rgba(209, 0, 0, 0) 70%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%);
+  animation: pulse-glow 4s linear infinite;
+}
+
+/* Outer edge glow ring — ~350% stronger perceived intensity */
+.animated-glow-button::after {
+  content: '';
+  position: absolute;
+  inset: 0; /* align to button edge */
+  border-radius: inherit;
+  pointer-events: none;
+  /* Replicate form field glow gradient (outer to inner) */
+  box-shadow:
+    0 0 18px rgba(209, 0, 0, 0.65),
+    0 0 36px rgba(209, 0, 0, 0.55),
+    0 0 64px rgba(209, 0, 0, 0.45),
+    0 0 96px rgba(209, 0, 0, 0.35);
+  outline: 1px solid rgba(209, 0, 0, 0.35);
+  filter: blur(0.2px);
+}
+
+.animated-glow-button:hover::after,
+.animated-glow-button:focus-visible::after {
+  box-shadow:
+    0 0 28px rgba(209, 0, 0, 0.9),
+    0 0 56px rgba(209, 0, 0, 0.8),
+    0 0 96px rgba(209, 0, 0, 0.65),
+    0 0 140px rgba(209, 0, 0, 0.5);
+  outline-color: rgba(209, 0, 0, 0.5);
+}

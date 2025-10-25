@@ -1,0 +1,11 @@
+name = "contact-worker"
+main = "src/index.ts"
+compatibility_date = "2024-06-20"
+
+[vars]
+# Optional: set to your Zoho region TLD (e.g. "in", "com")
+ZOHO_REGION = "com"
+
+# Optional: if you know the account ID, set it to avoid a lookup on each request
+# ZOHO_ACCOUNT_ID = ""
+
