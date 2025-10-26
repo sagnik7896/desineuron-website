@@ -1,16 +1,43 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 type AsciiArtProps = { disableRain?: boolean };
 
 // Blocky DESINEURON LABS ASCII Art
-const ASCII_LINES: string[] = [
+const _UNUSED_ASCII: string[] = [
   '██████╗ ███████╗███████╗██╗███╗   ██╗███████╗██╗   ██╗██████╗  ██████╗ ███╗   ██╗        ██╗      █████╗ ██████╗ ███████╗',
   '██╔══██╗██╔════╝██╔════╝██║████╗  ██║██╔════╝██║   ██║██╔══██╗██╔═══██╗████╗  ██║        ██║     ██╔══██╗██╔══██╗██╔════╝',
   '██║  ██║█████╗  ███████╗██║██╔██╗ ██║█████╗  ██║   ██║██████╔╝██║   ██║██╔██╗ ██║        ██║     ███████║██████╔╝███████╗',
   '██║  ██║██╔══╝  ╚════██║██║██║╚██╗██║██╔══╝  ██║   ██║██╔══██╗██║   ██║██║╚██╗██║        ██║     ██╔══██║██╔══██╗╚════██║',
   '██████╔╝███████╗███████║██║██║ ╚████║███████╗╚██████╔╝██║  ██║╚██████╔╝██║ ╚████║        ███████╗██║  ██║██████╔╝███████║',
   '╚═════╝ ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝        ╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝'
+];
+
+// Desktop wide ASCII art (used on >= sm)
+const desktopAsciiArt: string[] = [
+  '██████╗ ███████╗███████╗██╗███╗   ██╗███████╗██╗   ██╗██████╗  ██████╗ ███╗   ██╗        ██╗      █████╗ ██████╗ ███████╗',
+  '██╔══██╗██╔════╝██╔════╝██║████╗  ██║██╔════╝██║   ██║██╔══██╗██╔═══██╗████╗  ██║        ██║     ██╔══██╗██╔══██╗██╔════╝',
+  '██║  ██║█████╗  ███████╗██║██╔██╗ ██║█████╗  ██║   ██║██████╔╝██║   ██║██╔██╗ ██║        ██║     ███████║██████╔╝███████╗',
+  '██║  ██║██╔══╝  ╚════██║██║██║╚██╗██║██╔══╝  ██║   ██║██╔══██╗██║   ██║██║╚██╗██║        ██║     ██╔══██║██╔══██╗╚════██║',
+  '██████╔╝███████╗███████║██║██║ ╚████║███████╗╚██████╔╝██║  ██║╚██████╔╝██║ ╚████║        ███████╗██║  ██║██████╔╝███████║',
+  '╚═════╝ ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝        ╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝'
+];
+
+// Mobile stacked ASCII art (aligned)
+const mobileAsciiArt: string[] = [
+  '██████╗ ███████╗███████╗██╗███╗   ██╗███████╗██╗   ██╗██████╗  ██████╗ ███╗   ██╗',
+  '██╔══██╗██╔════╝██╔════╝██║████╗  ██║██╔════╝██║   ██║██╔══██╗██╔═══██╗████╗  ██║',
+  '██║  ██║█████╗  ███████╗██║██╔██╗ ██║█████╗  ██║   ██║██████╔╝██║   ██║██╔██╗ ██║',
+  '██║  ██║██╔══╝  ╚════██║██║██║╚██╗██║██╔══╝  ██║   ██║██╔══██╗██║   ██║██║╚██╗██║',
+  '██████╔╝███████╗███████║██║██║ ╚████║███████╗╚██████╔╝██║  ██║╚██████╔╝██║ ╚████║',
+  '╚═════╝ ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝',
+  ' ',
+  '██╗      █████╗ ██████╗ ███████╗',
+  '██║     ██╔══██╗██╔══██╗██╔════╝',
+  '██║     ███████║██████╔╝███████╗',
+  '██║     ██╔══██║██╔══██╗╚════██║',
+  '███████╗██║  ██║██████╔╝███████║',
+  '╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝',
 ];
 
 // Indic character set for rain/glitch/morphing
@@ -42,7 +69,18 @@ const INDIC_CHAR_SET: string[] = [
 ];
 
 const AsciiArt: React.FC<AsciiArtProps> = () => {
-  const baseChars = useMemo(() => ASCII_LINES.join('\n').split(''), []);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 640);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const asciiLines = isMobile ? mobileAsciiArt : desktopAsciiArt;
+  // Satisfy TS for legacy, unused ASCII block present in older file versions
+  void _UNUSED_ASCII;
+  const baseChars = useMemo(() => asciiLines.join('\n').split(''), [asciiLines]);
   const spanRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const stopFlags = useRef<boolean[]>([]);
 
@@ -126,8 +164,9 @@ const AsciiArt: React.FC<AsciiArtProps> = () => {
   // Render
   return (
     <div className="relative w-full h-full flex items-center justify-center select-none">
+      <div className="flex justify-center w-full">
       <motion.pre
-        className="relative z-10 text-brand-red-hot text-center text-[10px] md:text-sm lg:text-base xl:text-lg font-mono whitespace-pre leading-[1.1em]"
+        className="relative z-10 overflow-x-auto text-brand-red-hot text-center text-[6px] sm:text-[8px] lg:text-base font-mono whitespace-pre leading-[1.1em]"
         style={{ textShadow: '0 0 20px rgba(209, 0, 0, 0.8)' }}
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
@@ -140,7 +179,7 @@ const AsciiArt: React.FC<AsciiArtProps> = () => {
           }
         }}
       >
-        {useMemo(() => ASCII_LINES.join('\n').split(''), []).map((ch, i) => (
+        {useMemo(() => asciiLines.join('\n').split(''), [asciiLines]).map((ch, i) => (
           <motion.span
             key={i}
             ref={(el) => (spanRefs.current[i] = el)}
@@ -151,6 +190,7 @@ const AsciiArt: React.FC<AsciiArtProps> = () => {
           </motion.span>
         ))}
       </motion.pre>
+      </div>
     </div>
   );
 };

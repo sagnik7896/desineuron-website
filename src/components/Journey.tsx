@@ -17,10 +17,11 @@ interface CarouselItemProps {
   scale: number;
   margin: string;
   isSelected: boolean;
+  size: number;
 }
 
 
-const CarouselItem: React.FC<CarouselItemProps> = ({ video, scale, margin, isSelected }) => {
+const CarouselItem: React.FC<CarouselItemProps> = ({ video, scale, margin, isSelected, size }) => {
   return (
     <motion.div
       key={video.id}
@@ -28,8 +29,8 @@ const CarouselItem: React.FC<CarouselItemProps> = ({ video, scale, margin, isSel
       style={{
         borderRadius: '30px',
         clipPath: 'inset(0 0 0 0 round 30px)',
-        width: '400px',
-        height: '400px',
+        width: `${size}px`,
+        height: `${size}px`,
         boxShadow: isSelected ? '0 0 60px 25px rgba(255, 255, 255, 0.1)' : 'none',
       }}
       animate={{ scale, margin }}
@@ -49,6 +50,14 @@ const Journey: React.FC = () => {
   const controls = useAnimation();
   const carouselRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 640);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     fetch('/src/data/videos.json')
@@ -138,6 +147,7 @@ const Journey: React.FC = () => {
                   scale={index === currentIndex ? 1.1 : hoveredIndex === index ? 1.05 : 1}
                   margin={index === currentIndex ? '0 3rem' : '0'}
                   isSelected={index === currentIndex}
+                  size={isMobile ? 280 : 400}
                 />
               </motion.div>
             ))}

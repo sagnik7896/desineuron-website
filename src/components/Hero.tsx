@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
         <AsciiArt disableRain />
         <div style={{ marginBottom: '2rem' }} />
         <h1 className="text-5xl md:text-7xl font-bold text-brand-light">The Great Bottleneck is Over</h1>
-        <p className="text-2xl md:text-3xl text-brand-light/80 mt-4 max-w-3xl mx-auto">We are building the interface for thought. A new category of personal computing, designed to operate at the speed of the human mind.</p>
+        <p className="text-2xl md:text-3xl text-brand-light/80 mt-4 max-w-3xl mx-auto px-4 sm:px-0">We are building the interface for thought. A new category of personal computing, designed to operate at the speed of the human mind.</p>
         <motion.a 
           href="#community"
           whileHover={{ scale: 1.05 }}

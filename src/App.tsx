@@ -25,7 +25,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-brand-dark text-brand-light font-sans">
+    <div className="bg-brand-dark text-brand-light font-sans overflow-x-hidden">
       <motion.div
         className="pointer-events-none fixed inset-0 z-30 transition duration-300"
         style={{

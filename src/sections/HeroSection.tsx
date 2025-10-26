@@ -51,7 +51,7 @@ const HeroSection: React.FC = () => {
         <AsciiArt />
         <div style={{ marginBottom: '2rem' }} />
         <h1 className="text-5xl md:text-7xl font-bold text-brand-light mb-4">The Great Bottleneck is Over.</h1>
-        <p className="text-lg md:text-xl text-brand-light max-w-3xl mx-auto mb-8">
+        <p className="text-lg md:text-xl text-brand-light max-w-3xl mx-auto mb-8 px-4 sm:px-0">
           We are building the interface for thought. A new category of personal computing, designed to operate at the speed of the human mind.
         </p>
         <a
